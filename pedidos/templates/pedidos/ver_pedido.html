@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>Ver Pedido</title></head>
+<body>
+    {% include 'partials/navbar.html' %}
+    <div class="page-wrapper">
+        <h1>Pedido #{{ pedido.pedidoId }}</h1>
+        <div class="card">
+            <p><span class="text-muted">Cliente</span><br><strong>{{ pedido.clienteId }}</strong></p>
+            <p><span class="text-muted">Fecha</span><br><strong>{{ pedido.fecha_pedido|date:"d/m/Y H:i" }}</strong></p>
+            <p><span class="text-muted">Estado</span><br><span class="badge badge-{{ pedido.estado }}">{{ pedido.get_estado_display }}</span></p>
+
+            <h2>Productos</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Producto</th><th>Cantidad</th><th>Subtotal</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for detalle in pedido.detalles.all %}
+                        <tr>
+                            <td>{{ detalle.productoId.nombre_producto }}</td>
+                            <td>{{ detalle.cantidad }}</td>
+                            <td>$ {{ detalle.subtotal }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-center text-muted">Sin productos.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'actualizar_pedido' pedido.pedidoId %}" class="btn btn-warning">Editar</a>
+                <a href="{% url 'listar_pedidos' %}" class="btn btn-secondary">Volver</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+

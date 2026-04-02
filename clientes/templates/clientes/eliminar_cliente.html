@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>Eliminar Cliente</title></head>
+<body>
+    {% include 'partials/navbar.html' %}
+    <div class="page-wrapper">
+        <h1>Eliminar Cliente</h1>
+        <div class="card">
+            <p class="mb-4">¿Confirmas que deseas eliminar a <strong>{{ cliente.nombre_cliente }}</strong>? Esta acción no se puede deshacer.</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+                    <a href="{% url 'listar_clientes' %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+

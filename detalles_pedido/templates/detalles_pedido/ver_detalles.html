@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>Ver Detalle</title></head>
+<body>
+    {% include 'partials/navbar.html' %}
+    <div class="page-wrapper">
+        <h1>Detalle #{{ detalle_pedido.detallesId }}</h1>
+        <div class="card">
+            <p><span class="text-muted">ID</span><br><strong>{{ detalle_pedido.detallesId }}</strong></p>
+            <p><span class="text-muted">Pedido</span><br><strong>#{{ detalle_pedido.pedidoId.pedidoId }}</strong></p>
+            <p><span class="text-muted">Producto</span><br><strong>{{ detalle_pedido.productoId.nombre_producto }}</strong></p>
+            <p><span class="text-muted">Cantidad</span><br><strong>{{ detalle_pedido.cantidad }}</strong></p>
+            <p><span class="text-muted">Subtotal</span><br><strong>$ {{ detalle_pedido.subtotal }}</strong></p>
+            <div class="form-actions">
+                <a href="{% url 'actualizar_detalle_pedido' detalle_pedido.detallesId %}" class="btn btn-warning">Editar</a>
+                <a href="{% url 'listar_detalle_pedidos' %}" class="btn btn-secondary">Volver</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+

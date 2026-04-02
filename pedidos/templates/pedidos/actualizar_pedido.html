@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>Editar Pedido</title></head>
+<body>
+    {% include 'partials/navbar.html' %}
+    <div class="page-wrapper">
+        <h1>Editar Pedido #{{ pedido.pedidoId }}</h1>
+        <div class="card" style="max-width:860px">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <h2>Productos del pedido</h2>
+                {{ formset.management_form }}
+                <div class="table-wrap formset-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="formset-body">
+                            {% for detalle_form in formset %}
+                            <tr class="formset-row">
+                                <td>{{ detalle_form.productoId }}</td>
+                                <td>{{ detalle_form.cantidad }}</td>
+                                <td>{{ detalle_form.DELETE }}</td>
+                                {% for hidden in detalle_form.hidden_fields %}{{ hidden }}{% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" id="agregar-producto" class="btn btn-success btn-sm add-row-btn">+ Agregar producto</button>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+                    <a href="{% url 'listar_pedidos' %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <table style="display:none">
+        <tbody id="empty-form">
+            <tr class="formset-row">
+                <td>{{ formset.empty_form.productoId }}</td>
+                <td>{{ formset.empty_form.cantidad }}</td>
+                <td>{{ formset.empty_form.DELETE }}</td>
+                {% for hidden in formset.empty_form.hidden_fields %}{{ hidden }}{% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('agregar-producto').addEventListener('click', function () {
+            const totalForms = document.getElementById('id_detalles-TOTAL_FORMS');
+            const currentCount = parseInt(totalForms.value);
+            const emptyRow = document.querySelector('#empty-form .formset-row').cloneNode(true);
+            emptyRow.innerHTML = emptyRow.innerHTML.replace(/__prefix__/g, currentCount);
+            document.getElementById('formset-body').appendChild(emptyRow);
+            totalForms.value = currentCount + 1;
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - Gestion de Pedidos</title>
+    <style>
+        :root {
+            --bg: #f6f7fb;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --primary: #0f766e;
+            --primary-hover: #0b5f58;
+            --border: #e5e7eb;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(120deg, #f6f7fb 0%, #eef2ff 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .wrap {
+            width: min(980px, 100%);
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            padding: 28px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 2rem;
+        }
+
+        p {
+            margin: 0 0 24px;
+            color: var(--muted);
+        }
+
+        .panel {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fff;
+            padding: 16px;
+            line-height: 1.6;
+        }
+
+        .panel strong {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    {% include 'partials/navbar.html' %}
+    <main class="wrap">
+        <h1>Panel de Navegacion</h1>
+        <p>La navegacion principal ya esta disponible en la barra superior.</p>
+
+        <section class="panel">
+            <p><strong>Usa el navbar</strong> para moverte entre Pedidos, Clientes, Productos, Detalles y Admin.</p>
+            <p>Desde cada modulo puedes listar, crear, editar y eliminar registros.</p>
+        </section>
+    </main>
+</body>
+</html>
+
+
+

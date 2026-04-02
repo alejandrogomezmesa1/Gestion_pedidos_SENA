@@ -1,0 +1,128 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<nav class="main-nav">
+    <a href="/">Gestion de Pedidos</a>
+    <a href="/pedidos/">Pedidos</a>
+    <a href="/clientes/">Clientes</a>
+    <a href="/productos/">Productos</a>
+    <a href="/detalles_pedido/">Detalles</a>
+    <a href="/admin/">Admin</a>
+    {% if user.is_authenticated %}
+    <span style="margin-left:auto; display:flex; align-items:center; gap:12px;">
+        <span style="font-size:14px; color:#ccfbf1;">{{ user.username }}</span>
+        <form method="post" action="/usuarios/logout/" style="margin:0;">
+            {% csrf_token %}
+            <button type="submit" style="background:#0b5f58; color:#fff; border:1px solid #5eead4; border-radius:6px; padding:5px 14px; font-size:13px; cursor:pointer;">Cerrar sesión</button>
+        </form>
+    </span>
+    {% endif %}
+</nav>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    (function () {
+        function getActionFromText(text) {
+            var label = (text || '').trim().toLowerCase();
+            if (label.includes('eliminar')) return 'eliminar';
+            if (label.includes('editar') || label.includes('actualizar')) return 'editar';
+            if (label.includes('crear') || label.includes('guardar')) return 'crear';
+            return null;
+        }
+
+        function getConfirmConfig(action) {
+            if (action === 'eliminar') {
+                return {
+                    title: 'Confirmar eliminacion',
+                    text: 'Esta accion eliminara el registro. Deseas continuar?',
+                    icon: 'warning',
+                    confirmButtonText: 'Si, eliminar',
+                };
+            }
+
+            if (action === 'editar') {
+                return {
+                    title: 'Confirmar edicion',
+                    text: 'Se guardaran los cambios del registro. Deseas continuar?',
+                    icon: 'question',
+                    confirmButtonText: 'Si, editar',
+                };
+            }
+
+            return {
+                title: 'Confirmar creacion',
+                text: 'Se creara un nuevo registro. Deseas continuar?',
+                icon: 'question',
+                confirmButtonText: 'Si, crear',
+            };
+        }
+
+        document.addEventListener('click', function (event) {
+            var link = event.target.closest('a[href]');
+            if (!link) return;
+
+            if (link.closest('nav')) return;
+
+            var action = getActionFromText(link.textContent);
+            if (!action) return;
+
+            event.preventDefault();
+            var cfg = getConfirmConfig(action);
+
+            Swal.fire({
+                title: cfg.title,
+                text: cfg.text,
+                icon: cfg.icon,
+                showCancelButton: true,
+                confirmButtonText: cfg.confirmButtonText,
+                cancelButtonText: 'Cancelar'
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    window.location.href = link.href;
+                }
+            });
+        });
+
+        document.addEventListener('submit', function (event) {
+            var form = event.target;
+            if (!(form instanceof HTMLFormElement)) return;
+
+            if (form.dataset.confirmed === 'true') return;
+
+            var submitter = event.submitter;
+            var action = null;
+
+            if (submitter) {
+                action = getActionFromText(submitter.textContent || submitter.value);
+            }
+
+            if (!action) {
+                var path = window.location.pathname.toLowerCase();
+                if (path.includes('/eliminar/')) action = 'eliminar';
+                else if (path.includes('/editar/') || path.includes('/actualizar/')) action = 'editar';
+                else if (path.includes('/crear/')) action = 'crear';
+            }
+
+            if (!action) return;
+
+            event.preventDefault();
+            var cfg = getConfirmConfig(action);
+
+            Swal.fire({
+                title: cfg.title,
+                text: cfg.text,
+                icon: cfg.icon,
+                showCancelButton: true,
+                confirmButtonText: cfg.confirmButtonText,
+                cancelButtonText: 'Cancelar'
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    form.dataset.confirmed = 'true';
+                    form.submit();
+                }
+            });
+        });
+    })();
+</script>

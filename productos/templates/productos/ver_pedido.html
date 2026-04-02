@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Ver Pedido</title>
+</head>
+<body>
+
+    {% include 'partials/navbar.html' %}
+    <h1>Pedido #{{ pedido.pedidoId }}</h1>
+    <p><strong>Cliente:</strong> {{ pedido.clienteId }}</p>
+    <p><strong>Fecha:</strong> {{ pedido.fecha_pedido }}</p>
+    <p><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+    <h3>Detalle</h3>
+    <ul>
+        {% for detalle in pedido.detalles.all %}
+        <li>{{ detalle.productoId.nombre_producto }} - Cantidad: {{ detalle.cantidad }} - Subtotal: {{ detalle.subtotal }}</li>
+        {% empty %}
+        <li>Sin productos.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'listar_pedidos' %}">Volver</a></p>
+</body>
+</html>
+
+
+

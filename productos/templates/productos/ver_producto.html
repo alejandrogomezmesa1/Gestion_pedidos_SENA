@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>Detalle Producto</title></head>
+<body>
+    {% include 'partials/navbar.html' %}
+    <div class="page-wrapper">
+        <h1>Producto #{{ producto.productoId }}</h1>
+        <div class="card">
+            <p><span class="text-muted">ID</span><br><strong>{{ producto.productoId }}</strong></p>
+            <p><span class="text-muted">Nombre</span><br><strong>{{ producto.nombre_producto }}</strong></p>
+            <p><span class="text-muted">Precio</span><br><strong>$ {{ producto.precio }}</strong></p>
+            <p><span class="text-muted">Stock</span><br><strong>{{ producto.unidades_stock }} unidades</strong></p>
+            <div class="form-actions">
+                <a href="{% url 'actualizar_producto' producto.productoId %}" class="btn btn-warning">Editar</a>
+                <a href="{% url 'listar_productos' %}" class="btn btn-secondary">Volver</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
