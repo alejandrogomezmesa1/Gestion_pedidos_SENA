@@ -58,19 +58,27 @@ def eliminar_detalle_pedido(request, pk):
 
 @login_required
 def exportar_detalles_pdf(request):
+    def limpiar(texto):
+        reemplazos = {'á':'a','é':'e','í':'i','ó':'o','ú':'u','ñ':'n',
+                      'Á':'A','É':'E','Í':'I','Ó':'O','Ú':'U','Ñ':'N'}
+        for k, v in reemplazos.items():
+            texto = texto.replace(k, v)
+        return texto
+
     detalles = DetallePedido.objects.select_related('pedidoId', 'productoId').all()
     pdf = FPDF()
     pdf.add_page()
+    ancho = pdf.w - pdf.l_margin - pdf.r_margin
     pdf.set_font('Arial', 'B', 12)
-    pdf.cell(0, 10, 'Reporte de Detalles de Pedido', ln=True)
+    pdf.cell(ancho, 10, 'Reporte de Detalles de Pedido', ln=True)
     pdf.set_font('Arial', '', 10)
     for detalle in detalles:
-        linea = (
+        linea = limpiar(
             f"ID: {detalle.detallesId} | Pedido: {detalle.pedidoId.pedidoId} "
             f"| Producto: {detalle.productoId.nombre_producto} "
             f"| Cantidad: {detalle.cantidad} | Subtotal: {detalle.subtotal}"
         )
-        pdf.multi_cell(0, 8, linea)
+        pdf.multi_cell(ancho, 8, linea)
 
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="detalles_pedido.pdf"'

@@ -60,18 +60,26 @@ def eliminar_producto(request, pk):
 
 @login_required
 def exportar_productos_pdf(request):
+    def limpiar(texto):
+        reemplazos = {'á':'a','é':'e','í':'i','ó':'o','ú':'u','ñ':'n',
+                      'Á':'A','É':'E','Í':'I','Ó':'O','Ú':'U','Ñ':'N'}
+        for k, v in reemplazos.items():
+            texto = texto.replace(k, v)
+        return texto
+
     productos = Producto.objects.all()
     pdf = FPDF()
     pdf.add_page()
+    ancho = pdf.w - pdf.l_margin - pdf.r_margin
     pdf.set_font('Arial', 'B', 12)
-    pdf.cell(0, 10, 'Reporte de Productos', ln=True)
+    pdf.cell(ancho, 10, 'Reporte de Productos', ln=True)
     pdf.set_font('Arial', '', 10)
     for producto in productos:
-        linea = (
+        linea = limpiar(
             f"ID: {producto.productoId} | Nombre: {producto.nombre_producto} "
             f"| Precio: {producto.precio} | Stock: {producto.unidades_stock}"
         )
-        pdf.multi_cell(0, 8, linea)
+        pdf.multi_cell(ancho, 8, linea)
 
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="productos.pdf"'
