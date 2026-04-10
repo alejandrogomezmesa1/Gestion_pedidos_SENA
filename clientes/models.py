@@ -6,11 +6,11 @@ class Cliente(models.Model):
     clienteId = models.AutoField(primary_key=True)
     nombre_cliente = models.CharField(max_length=100)
     email = models.EmailField()
-    dirección = models.CharField(max_length=100)
-    teléfono = models.CharField(max_length=20)
+    direccion = models.CharField(max_length=100)
+    telefono = models.CharField(max_length=20)
     
     class Meta:
         db_table = "cliente"
 
     def __str__(self):
-        return self.nombre_cliente     
+        return self.nombre_cliente

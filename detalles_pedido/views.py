@@ -1,4 +1,5 @@
-from django.shortcuts import render,redirect, get_object_or_404
+# ── Importaciones necesarias ─────────────────────────────────────────────────
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,51 +8,61 @@ from fpdf import FPDF
 from openpyxl import Workbook
 from .models import DetallePedido
 from .forms import DetallePedidoForm
-# Create your views here.
+
+# ── LISTADO ───────────────────────────────────────────────────────────────────
+# select_related hace JOIN con pedido y producto en una sola consulta (evita N+1).
 class DetallePedidoListView(LoginRequiredMixin, ListView):
     template_name = 'detalles_pedido/listar_detalles.html'
     context_object_name = 'detalles_pedidos'
-    paginate_by = 10
+    paginate_by = 4
 
     def get_queryset(self):
         return DetallePedido.objects.select_related('pedidoId', 'productoId').all().order_by('detallesId')
 
+
+# ── CREAR ─────────────────────────────────────────────────────────────────────
+# Al guardar, el modelo DetallePedido.save() descuenta el stock y calcula el subtotal.
 @login_required
 def crear_detalle_pedido(request):
     if request.method == 'POST':
         form = DetallePedidoForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save()  # Dispara DetallePedido.save() → descuenta stock y calcula subtotal
             return redirect('listar_detalle_pedidos')
     else:
         form = DetallePedidoForm()
     return render(request, 'detalles_pedido/crear_detalles.html', {'form': form})
 
 
+# ── VER DETALLE ───────────────────────────────────────────────────────────────
 @login_required
 def ver_detalle_pedido(request, pk):
     detalle_pedido = get_object_or_404(DetallePedido, pk=pk)
     return render(request, 'detalles_pedido/ver_detalles.html', {'detalle_pedido': detalle_pedido})
 
 
+# ── ACTUALIZAR ────────────────────────────────────────────────────────────────
+# El modelo DetallePedido.save() devuelve el stock anterior y descuenta el nuevo.
 @login_required
 def actualizar_detalle_pedido(request, pk):
     detalle_pedido = get_object_or_404(DetallePedido, pk=pk)
     if request.method == 'POST':
         form = DetallePedidoForm(request.POST, instance=detalle_pedido)
         if form.is_valid():
-            form.save()
+            form.save()  # Dispara DetallePedido.save() → ajusta stock y recalcula subtotal
             return redirect('listar_detalle_pedidos')
     else:
         form = DetallePedidoForm(instance=detalle_pedido)
     return render(request, 'detalles_pedido/actualizar_detalles.html', {'form': form, 'detalle_pedido': detalle_pedido})
 
 
+# ── ELIMINAR ──────────────────────────────────────────────────────────────────
+# Al eliminar, el modelo DetallePedido.delete() restaura el stock del producto.
 @login_required
 def eliminar_detalle_pedido(request, pk):
     detalle_pedido = get_object_or_404(DetallePedido, pk=pk)
     if request.method == 'POST':
-        detalle_pedido.delete()
+        detalle_pedido.delete()  # Dispara DetallePedido.delete() → devuelve stock
         return redirect('listar_detalle_pedidos')
     return render(request, 'detalles_pedido/eliminar_detalles.html', {'detalle_pedido': detalle_pedido})
 
@@ -71,14 +82,22 @@ def exportar_detalles_pdf(request):
     ancho = pdf.w - pdf.l_margin - pdf.r_margin
     pdf.set_font('Arial', 'B', 12)
     pdf.cell(ancho, 10, 'Reporte de Detalles de Pedido', ln=True)
+    # Cabecera de tabla
+    pdf.set_font('Arial', 'B', 10)
+    pdf.cell(15, 8, 'ID', 1)
+    pdf.cell(20, 8, 'Pedido', 1)
+    pdf.cell(60, 8, 'Producto', 1)
+    pdf.cell(20, 8, 'Cantidad', 1)
+    pdf.cell(30, 8, 'Subtotal', 1)
+    pdf.ln()
     pdf.set_font('Arial', '', 10)
     for detalle in detalles:
-        linea = limpiar(
-            f"ID: {detalle.detallesId} | Pedido: {detalle.pedidoId.pedidoId} "
-            f"| Producto: {detalle.productoId.nombre_producto} "
-            f"| Cantidad: {detalle.cantidad} | Subtotal: {detalle.subtotal}"
-        )
-        pdf.multi_cell(ancho, 8, linea)
+        pdf.cell(15, 8, str(detalle.detallesId), 1)
+        pdf.cell(20, 8, str(detalle.pedidoId.pedidoId), 1)
+        pdf.cell(60, 8, limpiar(detalle.productoId.nombre_producto), 1)
+        pdf.cell(20, 8, str(detalle.cantidad), 1)
+        pdf.cell(30, 8, f"${detalle.subtotal:.2f}", 1)
+        pdf.ln()
 
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="detalles_pedido.pdf"'

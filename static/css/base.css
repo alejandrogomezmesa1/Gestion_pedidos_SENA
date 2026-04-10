@@ -1,3 +1,209 @@
+/* --- Estilos para login y registro --- */
+.auth-form-wrapper {
+    max-width: 400px;
+    margin: 48px auto 0 auto;
+    padding: 32px 28px 28px 28px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px #0002, 0 1.5px 6px #0f766e22;
+    animation: fadeIn 0.7s;
+}
+.auth-form-wrapper h2 {
+    margin-bottom: 18px;
+    font-size: 1.7rem;
+    color: var(--primary, #0f766e);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.auth-form-wrapper form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.auth-form-wrapper input[type="text"],
+.auth-form-wrapper input[type="email"],
+.auth-form-wrapper input[type="password"] {
+    padding: 10px 12px;
+    border: 1.5px solid #e0e7ef;
+    border-radius: 7px;
+    font-size: 1rem;
+    background: #f8fafc;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+.auth-form-wrapper input:focus {
+    border-color: var(--primary, #0f766e);
+    outline: none;
+    box-shadow: 0 0 0 2px #0f766e22;
+}
+.auth-form-wrapper button[type="submit"] {
+    background: linear-gradient(90deg, #0f766e 60%, #0e5e56 100%);
+    color: #fff;
+    border: none;
+    padding: 12px 0;
+    border-radius: 7px;
+    font-size: 1.08rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    box-shadow: 0 2px 8px #0f766e22;
+    transition: background 0.18s, box-shadow 0.18s;
+}
+.auth-form-wrapper button[type="submit"]:hover {
+    background: linear-gradient(90deg, #0e5e56 0%, #0f766e 100%);
+    box-shadow: 0 4px 16px #0f766e33;
+}
+.auth-form-wrapper p {
+    margin-top: 18px;
+    font-size: 14px;
+    text-align: center;
+}
+.auth-form-wrapper a {
+    color: var(--primary, #0f766e);
+    text-decoration: underline;
+    font-weight: 500;
+    transition: color 0.18s;
+}
+.auth-form-wrapper a:hover {
+    color: #0e5e56;
+}
+@media (max-width: 600px) {
+    .auth-form-wrapper {
+        padding: 18px 6vw 18px 6vw;
+        margin: 24px auto 0 auto;
+    }
+    .auth-form-wrapper h2 {
+        font-size: 1.2rem;
+    }
+}
+/* --- Estilos para header y site-title movidos desde base.html --- */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 2px 8px #0001;
+    padding: 0;
+    margin-bottom: 24px;
+    transition: box-shadow 0.3s;
+}
+.site-title {
+    margin: 0;
+    padding: 18px 32px 10px 32px;
+    font-size: 2.1rem;
+    color: var(--primary);
+    letter-spacing: 1px;
+    font-weight: 700;
+    display: inline-block;
+    transition: color 0.3s;
+}
+main {
+    min-height: 70vh;
+    padding: 24px 16px 32px 16px;
+    animation: fadeIn 0.7s;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 700px) {
+    .site-title { font-size: 1.3rem; padding: 14px 12px 8px 12px; }
+    main { padding: 12px 2vw 24px 2vw; }
+}
+
+/* --- Mejora de estilos para el navbar --- */
+nav.main-nav {
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-height: 56px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.10);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--primary-light);
+    border-radius: 0 0 18px 18px;
+    transition: box-shadow 0.3s, background 0.3s;
+}
+nav.main-nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background .18s, color .18s, box-shadow .18s;
+    margin: 0 2px;
+    letter-spacing: 0.5px;
+    position: relative;
+    display: inline-block;
+}
+nav.main-nav a:first-child {
+    color: #fff;
+    font-weight: 700;
+    font-size: 17px;
+    margin-right: 12px;
+    letter-spacing: 1px;
+}
+nav.main-nav a:hover, nav.main-nav a.active {
+    background: rgba(255,255,255,.18);
+    color: #fff;
+    box-shadow: 0 2px 8px #0002;
+}
+nav.main-nav a::after {
+    content: '';
+    display: block;
+    margin: 0 auto;
+    width: 0%;
+    height: 2px;
+    background: #fff;
+    transition: width 0.2s;
+}
+nav.main-nav a:hover::after, nav.main-nav a.active::after {
+    width: 60%;
+}
+nav.main-nav button[type="submit"] {
+    background: var(--primary-dark);
+    color: #fff;
+    border: 1px solid var(--primary-light);
+    border-radius: 6px;
+    padding: 5px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-weight: 600;
+    transition: background 0.18s, border 0.18s;
+}
+nav.main-nav button[type="submit"]:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+@media (max-width: 700px) {
+    nav.main-nav {
+        padding: 0 8px;
+        min-height: 48px;
+        gap: 2px;
+    }
+    nav.main-nav a {
+        font-size: 13px;
+        padding: 8px 8px;
+    }
+    nav.main-nav a:first-child {
+        font-size: 14px;
+        margin-right: 4px;
+    }
+}
+
+/* --- Nombre de usuario en el navbar --- */
+.main-nav .user-name {
+    color: #fff !important;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-size: 15px;
+}
+
 /* ============================================================
    BASE.CSS — Gestion de Pedidos
    ============================================================ */
@@ -48,37 +254,73 @@ body {
 /* ── Navbar ─────────────────────────────────────────────────── */
 nav.main-nav {
     background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
-    padding: 0 24px;
+    padding: 0 32px;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
     flex-wrap: wrap;
     min-height: 56px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    box-shadow: 0 4px 16px rgba(0,0,0,.10);
     position: sticky;
     top: 0;
     z-index: 100;
+    border-bottom: 2px solid var(--primary-light);
+    border-radius: 0 0 18px 18px;
+    transition: box-shadow 0.3s, background 0.3s;
 }
 
 nav.main-nav a {
-    color: rgba(255,255,255,.85);
+    color: #fff;
     text-decoration: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    font-size: 14px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 15px;
     font-weight: 500;
-    transition: background .15s, color .15s;
+    transition: background .18s, color .18s, box-shadow .18s;
+    margin: 0 2px;
+    letter-spacing: 0.5px;
+    position: relative;
+    display: inline-block;
 }
 nav.main-nav a:first-child {
     color: #fff;
     font-weight: 700;
-    font-size: 15px;
-    margin-right: 8px;
+    font-size: 17px;
+    margin-right: 12px;
+    letter-spacing: 1px;
 }
 nav.main-nav a:hover, nav.main-nav a.active {
     background: rgba(255,255,255,.18);
     color: #fff;
-    text-decoration: none;
+    box-shadow: 0 2px 8px #0002;
+}
+nav.main-nav a::after {
+    content: '';
+    display: block;
+    margin: 0 auto;
+    width: 0%;
+    height: 2px;
+    background: #fff;
+    transition: width 0.2s;
+}
+nav.main-nav a:hover::after, nav.main-nav a.active::after {
+    width: 60%;
+}
+
+@media (max-width: 700px) {
+    nav.main-nav {
+        padding: 0 8px;
+        min-height: 48px;
+        gap: 2px;
+    }
+    nav.main-nav a {
+        font-size: 13px;
+        padding: 8px 8px;
+    }
+    nav.main-nav a:first-child {
+        font-size: 14px;
+        margin-right: 4px;
+    }
 }
 
 /* ── Page wrapper ───────────────────────────────────────────── */

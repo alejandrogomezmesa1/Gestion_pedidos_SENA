@@ -11,7 +11,11 @@
             <p><span class="text-muted">Precio</span><br><strong>$ {{ producto.precio }}</strong></p>
             <p><span class="text-muted">Stock</span><br><strong>{{ producto.unidades_stock }} unidades</strong></p>
             <div class="form-actions">
-                <a href="{% url 'actualizar_producto' producto.productoId %}" class="btn btn-warning">Editar</a>
+                <a href="{% url 'actualizar_producto' producto.productoId %}" class="btn btn-warning" title="Editar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M15.502 1.94a1.5 1.5 0 0 1 0 2.12l-1.439 1.439-2.12-2.12 1.439-1.44a1.5 1.5 0 0 1 2.12 0zM14.061 5.439l-2.12-2.12L4.939 10.32a1.5 1.5 0 0 0-.378.684l-.805 2.414a.5.5 0 0 0 .632.632l2.414-.805a1.5 1.5 0 0 0 .684-.378l6.999-6.998z"/>
+                    </svg>
+                </a>
                 <a href="{% url 'listar_productos' %}" class="btn btn-secondary">Volver</a>
             </div>
         </div>

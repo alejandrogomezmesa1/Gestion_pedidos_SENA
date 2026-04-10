@@ -1,60 +1,70 @@
-from django.shortcuts import render,redirect, get_object_or_404
+# ── Importaciones necesarias ─────────────────────────────────────────────────
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required      # Protege vistas de funciones
+from django.contrib.auth.mixins import LoginRequiredMixin      # Protege vistas de clases
 from django.views.generic import ListView
 from fpdf import FPDF
 from openpyxl import Workbook
 from .models import Producto
 from .forms import ProductoForm
 
-# Create your views here.
-
+# ── LISTADO ───────────────────────────────────────────────────────────────────
 class ProductoListView(LoginRequiredMixin, ListView):
     model = Producto
     template_name = 'productos/listar_producto.html'
-    context_object_name = 'productos'
-    paginate_by = 10
+    context_object_name = 'productos'  # nombre de la variable en el template
+    paginate_by = 4                   # 4 productos por página
     ordering = ['productoId']
 
 
+# ── CREAR ─────────────────────────────────────────────────────────────────────
 @login_required
 def crear_producto(request):
     if request.method == 'POST':
         form = ProductoForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save()                # Guarda el nuevo producto en la BD
             return redirect('listar_productos')
     else:
-        form = ProductoForm()
+        form = ProductoForm()          # Formulario vacío
     return render(request, 'productos/crear_producto.html', {'form': form})
 
 
+# ── VER DETALLE ───────────────────────────────────────────────────────────────
 @login_required
 def ver_producto(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
     return render(request, 'productos/ver_producto.html', {'producto': producto})
 
 
+# ── ACTUALIZAR ────────────────────────────────────────────────────────────────
 @login_required
 def actualizar_producto(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
     if request.method == 'POST':
-        form = ProductoForm(request.POST, instance=producto)
+        form = ProductoForm(request.POST, instance=producto)  # Vincula el form al registro
         if form.is_valid():
             form.save()
             return redirect('listar_productos')
     else:
-        form = ProductoForm(instance=producto)
+        form = ProductoForm(instance=producto)  # Muestra datos actuales del producto
     return render(request, 'productos/actualizar_producto.html', {'form': form, 'producto': producto})
 
 
+# ── ELIMINAR ──────────────────────────────────────────────────────────────────
+# Se pide confirmación vía POST antes de eliminar (el GET solo muestra el template de confirmación).
 @login_required
 def eliminar_producto(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
-    if request.method == 'POST':
-        producto.delete()
-        return redirect('listar_productos')
+    error = None
+    if request.method == 'POST':       # Solo elimina si el usuario confirmó
+        try:
+            producto.delete()
+            return redirect('listar_productos')
+        except Exception as e:
+            error = 'No se puede eliminar el producto porque está asociado a uno o más pedidos.'
+    return render(request, 'productos/eliminar_producto.html', {'producto': producto, 'error': error})
     return render(request, 'productos/eliminar_producto.html', {'producto': producto})
 
 
@@ -73,13 +83,20 @@ def exportar_productos_pdf(request):
     ancho = pdf.w - pdf.l_margin - pdf.r_margin
     pdf.set_font('Arial', 'B', 12)
     pdf.cell(ancho, 10, 'Reporte de Productos', ln=True)
+    # Cabecera de tabla
+    pdf.set_font('Arial', 'B', 10)
+    pdf.cell(15, 8, 'ID', 1)
+    pdf.cell(60, 8, 'Nombre', 1)
+    pdf.cell(30, 8, 'Precio', 1)
+    pdf.cell(25, 8, 'Stock', 1)
+    pdf.ln()
     pdf.set_font('Arial', '', 10)
     for producto in productos:
-        linea = limpiar(
-            f"ID: {producto.productoId} | Nombre: {producto.nombre_producto} "
-            f"| Precio: {producto.precio} | Stock: {producto.unidades_stock}"
-        )
-        pdf.multi_cell(ancho, 8, linea)
+        pdf.cell(15, 8, str(producto.productoId), 1)
+        pdf.cell(60, 8, limpiar(producto.nombre_producto), 1)
+        pdf.cell(30, 8, f"${producto.precio:.2f}", 1)
+        pdf.cell(25, 8, str(producto.unidades_stock), 1)
+        pdf.ln()
 
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="productos.pdf"'

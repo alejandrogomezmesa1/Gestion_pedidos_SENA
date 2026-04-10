@@ -7,6 +7,9 @@
         <h1>Eliminar Cliente</h1>
         <div class="card">
             <p class="mb-4">¿Confirmas que deseas eliminar a <strong>{{ cliente.nombre_cliente }}</strong>? Esta acción no se puede deshacer.</p>
+            {% if error %}
+                <div class="alert alert-danger" style="margin-bottom:16px;">{{ error }}</div>
+            {% endif %}
             <form method="post">
                 {% csrf_token %}
                 <div class="form-actions">

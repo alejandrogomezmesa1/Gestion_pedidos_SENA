@@ -64,13 +64,27 @@
 
     {% include 'partials/navbar.html' %}
     <main class="wrap">
-        <h1>Panel de Navegacion</h1>
-        <p>La navegacion principal ya esta disponible en la barra superior.</p>
+        <h1 style="color:var(--primary);font-size:2.1rem;font-weight:700;margin-bottom:12px;text-align:center;">¡Bienvenido a tu panel de gestión!</h1>
+        <p style="text-align:center;margin-bottom:28px;">Accede rápidamente a todos los módulos desde el menú superior.<br>Gestiona <span style="color:var(--primary-dark);font-weight:600;">Pedidos</span>, <span style="color:var(--primary-dark);font-weight:600;">Clientes</span>, <span style="color:var(--primary-dark);font-weight:600;">Productos</span> y más.</p>
 
-        <section class="panel">
-            <p><strong>Usa el navbar</strong> para moverte entre Pedidos, Clientes, Productos, Detalles y Admin.</p>
-            <p>Desde cada modulo puedes listar, crear, editar y eliminar registros.</p>
-        </section>
+        <div style="display:flex;flex-wrap:wrap;gap:24px;justify-content:center;">
+            <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:22px 32px;min-width:220px;box-shadow:0 2px 8px #0001;">
+                <h3 style="color:var(--success);margin-bottom:8px;font-size:1.1rem;">Pedidos</h3>
+                <p style="color:var(--muted);font-size:15px;">Crea, consulta y administra los pedidos de tus clientes.</p>
+            </div>
+            <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:22px 32px;min-width:220px;box-shadow:0 2px 8px #0001;">
+                <h3 style="color:var(--success);margin-bottom:8px;font-size:1.1rem;">Clientes</h3>
+                <p style="color:var(--muted);font-size:15px;">Gestiona la información y el historial de tus clientes.</p>
+            </div>
+            <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:22px 32px;min-width:220px;box-shadow:0 2px 8px #0001;">
+                <h3 style="color:var(--success);margin-bottom:8px;font-size:1.1rem;">Productos</h3>
+                <p style="color:var(--muted);font-size:15px;">Administra tu catálogo de productos de manera eficiente.</p>
+            </div>
+            <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:22px 32px;min-width:220px;box-shadow:0 2px 8px #0001;">
+                <h3 style="color:var(--success);margin-bottom:8px;font-size:1.1rem;">Detalles</h3>
+                <p style="color:var(--muted);font-size:15px;">Consulta y edita los detalles de cada pedido fácilmente.</p>
+            </div>
+        </div>
     </main>
 </body>
 </html>

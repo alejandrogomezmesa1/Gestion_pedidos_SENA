@@ -7,7 +7,7 @@ from django import forms
 class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ['nombre_cliente', 'email', 'dirección', 'teléfono']
+        fields = ['nombre_cliente', 'email', 'direccion', 'telefono']
         
         widgets = {
             'nombre_cliente': forms.TextInput(attrs={
@@ -18,13 +18,12 @@ class ClienteForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Ingrese el email del cliente'
             }),
-            'dirección': forms.TextInput(attrs={
+            'direccion': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Ingrese la dirección del cliente'
             }),
-            'teléfono': forms.TextInput(attrs={
+            'telefono': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Ingrese el teléfono del cliente'
             })
         }
-        

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block navbar %}{% endblock %}
+{% block content %}
+<div class="auth-form-wrapper">
+    <h2>Iniciar sesión</h2>
+    <form id="login-form">
+        <label for="id_username">Usuario</label>
+        <input type="text" name="username" id="id_username" required autocomplete="username">
+        <label for="id_password">Contraseña</label>
+        <input type="password" name="password" id="id_password" required autocomplete="current-password">
+        <button type="submit">Entrar</button>
+    </form>
+    <div id="login-error" style="color:#b91c1c;margin-top:10px;display:none;"></div>
+    <p>¿No tienes cuenta? <a href="/registro/">Regístrate aquí</a></p>
+</div>
+
+{% block extra_js %}
+<script>
+// Login AJAX con JWT y guardado de expiración
+document.getElementById('login-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const username = document.getElementById('id_username').value;
+    const password = document.getElementById('id_password').value;
+    const errorDiv = document.getElementById('login-error');
+    errorDiv.style.display = 'none';
+    try {
+        const resp = await fetch('/clientes/api/login/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await resp.json();
+        if (resp.ok && data.access) {
+            // Decodifica el JWT y guarda la expiración
+            const payload = JSON.parse(atob(data.access.split('.')[1]));
+            if (payload.exp) {
+                localStorage.setItem('jwt_exp', payload.exp);
+            }
+            localStorage.setItem('jwt_token', data.access);
+            window.location.href = '/';
+        } else {
+            errorDiv.textContent = data.error || 'Credenciales inválidas';
+            errorDiv.style.display = 'block';
+        }
+    } catch (err) {
+        errorDiv.textContent = 'Error de red o servidor.';
+        errorDiv.style.display = 'block';
+    }
+});
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Si usas autenticación JWT vía AJAX, este script debe ejecutarse tras el login exitoso
+// y guardar la expiración del token en localStorage/sessionStorage para la alerta global
+function setJwtExpFromToken(token) {
+    // Decodifica el payload del JWT y extrae el campo exp
+    if (!token) return;
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.exp) {
+            localStorage.setItem('jwt_exp', payload.exp);
+        }
+    } catch (e) {}
+}
+// Si el backend redirige tras login, este script debe ejecutarse en la respuesta AJAX
+// Ejemplo de uso tras login exitoso:
+// setJwtExpFromToken(token)
+</script>
+{% endblock %}

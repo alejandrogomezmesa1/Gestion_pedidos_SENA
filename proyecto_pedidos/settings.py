@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'clientes',
     'productos',
     'detalles_pedido',
-    'usuarios',
+
 ]
 
 MIDDLEWARE = [
@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'middleware.jwt_middleware.JWTMiddleware',  # JWT Middleware personalizado
 ]
 
 ROOT_URLCONF = 'proyecto_pedidos.urls'
@@ -85,7 +86,7 @@ WSGI_APPLICATION = 'proyecto_pedidos.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sistema_pedidos',
+        'NAME': 'pedidos',
         'USER': 'root',
         'PASSWORD': 'Alejandro15',
         'HOST': 'localhost',
@@ -135,9 +136,9 @@ STATICFILES_DIRS = [
 ]
 
 # ── Autenticación ──────────────────────────────────────────────
-LOGIN_URL = '/usuarios/login/'
+LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/usuarios/login/'
+LOGOUT_REDIRECT_URL = '/login/'
 
 # ── Django REST Framework ──────────────────────────────────────
 REST_FRAMEWORK = {
@@ -150,16 +151,8 @@ REST_FRAMEWORK = {
 }
 
 # ── SimpleJWT ─────────────────────────────────────────────────
-from datetime import timedelta
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME':  timedelta(hours=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'ROTATE_REFRESH_TOKENS':  True,
-    'BLACKLIST_AFTER_ROTATION': False,
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-}
+from core.jwt_config import JWT_SETTINGS
+SIMPLE_JWT = JWT_SETTINGS
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

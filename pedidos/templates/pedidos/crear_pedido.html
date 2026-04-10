@@ -6,6 +6,21 @@
     <div class="page-wrapper">
         <h1>Nuevo Pedido</h1>
         <div class="card" style="max-width:860px">
+            {% if error %}
+                <div class="alert alert-danger" style="margin-bottom:16px;">{{ error }}</div>
+            {% endif %}
+            {% if formset.non_form_errors %}
+                <div class="alert alert-danger" style="margin-bottom:16px;">
+                    {{ formset.non_form_errors }}
+                </div>
+            {% endif %}
+            {% for detalle_form in formset %}
+                {% for field in detalle_form %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger" style="margin-bottom:16px;">{{ error }}</div>
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}

@@ -1,9 +1,14 @@
 from django.shortcuts import render
 from django.urls import path
 from . import views
+from .views import registro_view, logout_view
 # Create your views here.
 
 urlpatterns = [
+    path('login/', views.login_view, name='login'),
+    path('api/login/', views.login_jwt_view, name='login_jwt'),
+    path('logout/', logout_view, name='logout'),
+    path('registro/', registro_view, name='registro'),
     path('', views.ClienteListView.as_view(), name='listar_clientes'),
     path('crear/', views.crear_cliente, name='crear_cliente'),
     path('<int:pk>/', views.ver_cliente, name='ver_cliente'),
