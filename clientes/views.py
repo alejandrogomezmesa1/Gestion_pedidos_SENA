@@ -4,13 +4,18 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
 # Endpoint de login JWT por AJAX
+from django.contrib.auth import authenticate, login as auth_login
 @csrf_exempt
 def login_jwt_view(request):
     if request.method == 'POST':
         import json
         data = json.loads(request.body)
+        username = data.get('username')
+        password = data.get('password')
+        user = authenticate(request, username=username, password=password)
         serializer = TokenObtainPairSerializer(data=data)
-        if serializer.is_valid():
+        if user is not None and serializer.is_valid():
+            auth_login(request, user)
             return JsonResponse(serializer.validated_data)
         return JsonResponse({'error': 'Credenciales inválidas'}, status=400)
 from django.contrib.auth import logout

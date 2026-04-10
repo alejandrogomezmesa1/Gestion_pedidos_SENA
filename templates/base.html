@@ -47,30 +47,41 @@
         if (!exp) return null;
         return parseInt(exp, 10);
     }
-    function showTokenExpireAlert() {
+    function showTokenExpireAlert(segRestantes) {
+        let minutos = Math.floor(segRestantes / 60);
+        let segundos = segRestantes % 60;
+        let texto = '';
+        if (minutos > 0) {
+            texto = `Tu token de acceso expirará en ${minutos} minuto${minutos > 1 ? 's' : ''} y ${segundos} segundo${segundos !== 1 ? 's' : ''}. Guarda tu trabajo o renueva tu sesión.`;
+        } else {
+            texto = `Tu token de acceso expirará en ${segundos} segundo${segundos !== 1 ? 's' : ''}. Guarda tu trabajo o renueva tu sesión.`;
+        }
         if (window.Swal) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Tu sesión está por expirar',
-                text: 'Tu token de acceso expirará en menos de 1 minuto. Guarda tu trabajo o renueva tu sesión.',
+                text: texto,
                 confirmButtonText: 'Entendido',
                 timer: 15000,
                 timerProgressBar: true
             });
         } else {
-            alert('Tu token de acceso expirará en menos de 1 minuto.');
+            alert(texto);
         }
     }
-    function setupTokenExpireWarning() {
+    function setupTokenExpireWarning(forceShow) {
         let exp = getTokenExp();
         if (!exp) return;
         let now = Math.floor(Date.now() / 1000);
+        let segRestantes = exp - now;
         let msToAlert = (exp - 60 - now) * 1000;
-        if (msToAlert > 0) {
-            setTimeout(showTokenExpireAlert, msToAlert);
-        } else if (exp - now > 0) {
+        if (forceShow) {
+            showTokenExpireAlert(segRestantes);
+        } else if (msToAlert > 0) {
+            setTimeout(function() { showTokenExpireAlert(60); }, msToAlert);
+        } else if (segRestantes > 0) {
             // Si ya está en la ventana de 1 minuto, alerta inmediatamente
-            showTokenExpireAlert();
+            showTokenExpireAlert(segRestantes);
         }
     }
     setupTokenExpireWarning();

@@ -37,7 +37,13 @@ document.getElementById('login-form').addEventListener('submit', async function(
                 localStorage.setItem('jwt_exp', payload.exp);
             }
             localStorage.setItem('jwt_token', data.access);
-            window.location.href = '/';
+            // Forzar alerta con tiempo exacto restante antes de redirigir
+            if (typeof setupTokenExpireWarning === 'function') {
+                setupTokenExpireWarning(true);
+            }
+            setTimeout(function() {
+                window.location.href = '/';
+            }, 1200); // Retardo para asegurar que la alerta se vea
         } else {
             errorDiv.textContent = data.error || 'Credenciales inválidas';
             errorDiv.style.display = 'block';
@@ -49,23 +55,5 @@ document.getElementById('login-form').addEventListener('submit', async function(
 });
 </script>
 {% endblock %}
-
-{% block extra_js %}
-<script>
-// Si usas autenticación JWT vía AJAX, este script debe ejecutarse tras el login exitoso
-// y guardar la expiración del token en localStorage/sessionStorage para la alerta global
-function setJwtExpFromToken(token) {
-    // Decodifica el payload del JWT y extrae el campo exp
-    if (!token) return;
-    try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        if (payload.exp) {
-            localStorage.setItem('jwt_exp', payload.exp);
-        }
-    } catch (e) {}
-}
-// Si el backend redirige tras login, este script debe ejecutarse en la respuesta AJAX
-// Ejemplo de uso tras login exitoso:
-// setJwtExpFromToken(token)
-</script>
 {% endblock %}
+

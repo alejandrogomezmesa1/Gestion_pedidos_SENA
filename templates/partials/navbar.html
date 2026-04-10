@@ -12,10 +12,21 @@
     {% if user.is_authenticated %}
     <span style="margin-left:auto; display:flex; align-items:center; gap:12px;">
         <span class="user-name">{{ user.username }}</span>
-        <form method="post" action="/clientes/logout/" style="margin:0;">
-            {% csrf_token %}
-            <button type="submit">Cerrar sesión</button>
-        </form>
+        <a href="/clientes/logout/" id="logout-link" style="background:#ef4444; color:#fff; border:1px solid #fca5a5; border-radius:6px; padding:5px 14px; font-size:13px; text-decoration:none;">Cerrar sesión</a>
+    <script>
+    // Limpiar JWT al cerrar sesión
+    document.addEventListener('DOMContentLoaded', function() {
+        var logoutLink = document.getElementById('logout-link');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', function() {
+                localStorage.removeItem('jwt_token');
+                localStorage.removeItem('jwt_exp');
+                sessionStorage.removeItem('jwt_token');
+                sessionStorage.removeItem('jwt_exp');
+            });
+        }
+    });
+    </script>
     </span>
     {% else %}
     <span style="margin-left:auto; display:flex; align-items:center; gap:12px;">
